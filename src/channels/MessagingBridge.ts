@@ -87,6 +87,9 @@ export class MessagingBridge implements EventListenerObject, MessagingChannel {
                     this.registry
                         .get(subscriber.name)
                         .notifyEventListeners(event);
+                    this.registry
+                        .get(subscriber.name)
+                        .publish(event.data);
                 } else {
                     throw new Error(subscriber + " does not exist in registry");
                 }

@@ -32,7 +32,7 @@ export class RecipientList implements MessageRouting {
      */
     getRecipients(event: MessageEvent): Array<EndpointProperties> {
         const publisher = this.findByHost(new URL(event.origin).host);
-        if (publisher) {
+        if (publisher && this.recipients.has(publisher.name)) {
             return this.recipients.get(publisher.name);
         }
         return [];

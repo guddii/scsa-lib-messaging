@@ -1,0 +1,8 @@
+{
+  "extends": [
+    "stylelint-prettier/recommended"
+  ],
+  "rules": {
+    "indentation": 4
+  }
+}
