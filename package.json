@@ -1,0 +1,18 @@
+{
+  "name": "scsa-lib-messaging",
+  "version": "1.0.0",
+  "description": "Messaging Library for Self-Contained Systems",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guddii/scsa-lib-messaging.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guddii/scsa-lib-messaging/issues"
+  },
+  "homepage": "https://github.com/guddii/scsa-lib-messaging#readme"
+}
