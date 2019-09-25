@@ -16,6 +16,6 @@ export class SecurityChecks {
      */
     isTrustedURL(origin: string): boolean {
         const host = new URL(origin).host;
-        return this.secureContexts.includes(host);
+        return !!this.secureContexts.find(value => value ===host);
     }
 }
