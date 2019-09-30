@@ -1,6 +1,7 @@
 import { SecurityChecks } from "../SecurityChecks";
 import { Message } from "../constructors/Message";
 import { EndpointProperties } from "./Endpoint";
+import { LoggerSingleton } from "../LoggerSingleton";
 
 export class MessageEndpoint implements EventListenerObject {
     endpointProperties: EndpointProperties;
@@ -37,8 +38,12 @@ export class MessageEndpoint implements EventListenerObject {
      * @param event
      */
     subscribe(event: MessageEvent) {
-        console.log(this.endpointProperties.name + " received data");
-        console.log(event.data);
+        try {
+            const instance = LoggerSingleton.getInstance();
+            instance.write(event.data);
+        } catch (error) {
+            console.warn(error);
+        }
     }
 
     /**

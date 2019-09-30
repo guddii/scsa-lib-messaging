@@ -8,6 +8,7 @@ const { prodPath, srcPath } = require("./path");
 const { selectedPreprocessor } = require("./loader");
 
 module.exports = {
+    stats: "errors-warnings",
     entry: {
         main: path.resolve(__dirname, srcPath + "/main.ts")
     },

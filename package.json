@@ -1,5 +1,5 @@
 {
-  "name": "scsa-lib-messaging",
+  "name": "@scsa/messaging",
   "version": "1.0.0",
   "description": "Messaging Library for Self-Contained Systems",
   "scripts": {
