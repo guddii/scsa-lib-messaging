@@ -1,5 +1,6 @@
 {
   "name": "@scsa/messaging",
+  "private": true,
   "version": "1.0.0",
   "description": "Messaging Library for Self-Contained Systems",
   "scripts": {
