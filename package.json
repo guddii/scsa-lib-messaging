@@ -2,9 +2,14 @@
   "name": "@scsa/messaging",
   "private": true,
   "version": "1.0.0",
-  "description": "Messaging Library for Self-Contained Systems",
+  "description": "Messaging Library",
+  "main": "index.ts",
+  "types": "./src/types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@scsa/base": "https://github.com:guddii/scsa-cfg-base.git"
   },
   "repository": {
     "type": "git",
