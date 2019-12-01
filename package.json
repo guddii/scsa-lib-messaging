@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Messaging Library",
-  "main": "index.ts",
+  "main": "./index.ts",
   "types": "./src/types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

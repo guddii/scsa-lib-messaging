@@ -1,6 +1,6 @@
-import { MessagingBridge } from "./channels/MessagingBridge";
-import { RecipientList } from "./routers/RecipientList";
-import { Endpoint, EndpointProperties } from "./endpoints/Endpoint";
+import { MessagingBridge } from "./channels";
+import { RecipientList } from "./routers";
+import { Endpoint, EndpointProperties } from "./endpoints";
 import { MessageRouting } from "./types/MessageRouting";
 import { MessagingChannel } from "./types/MessagingChannel";
 import { SecurityChecks } from "./SecurityChecks";
