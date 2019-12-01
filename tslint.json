@@ -1,0 +1,3 @@
+{
+  "extends": "@scsa/base/src/tslint"
+}

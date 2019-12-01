@@ -1,11 +1,7 @@
 {
+  "extends": "@scsa/base/src/typescript/tsconfig",
   "compilerOptions": {
-    "outDir": "./dist",
-    "noImplicitAny": true,
-    "target": "es2015",
-    "allowJs": false,
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "typeRoots": ["src/types"]
+    "baseUrl": ".",
+    "outDir": "./dist"
   }
 }
