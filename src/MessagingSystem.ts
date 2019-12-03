@@ -1,8 +1,8 @@
 import { MessagingBridge } from "./channels";
 import { RecipientList } from "./routers";
 import { Endpoint, EndpointProperties } from "./endpoints";
-import { MessageRouting } from "./types/MessageRouting";
-import { MessagingChannel } from "./types/MessagingChannel";
+import { MessageRouting } from "./types";
+import { MessagingChannel } from "./types";
 import { SecurityChecks } from "./SecurityChecks";
 
 export class MessagingSystem {

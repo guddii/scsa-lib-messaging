@@ -1,5 +1,5 @@
 import { SecurityChecks } from "../SecurityChecks";
-import { Message } from "../constructors/Message";
+import { Message } from "../constructors";
 import { EndpointProperties } from "./Endpoint";
 import { LoggerSingleton } from "../LoggerSingleton";
 

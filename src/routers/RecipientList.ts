@@ -1,5 +1,5 @@
-import { MessageRouting } from "../types/MessageRouting";
-import { Endpoint, EndpointProperties } from "../endpoints/Endpoint";
+import { MessageRouting } from "../types";
+import { Endpoint, EndpointProperties } from "../endpoints";
 
 export class RecipientList implements MessageRouting {
     private readonly recipients = new Map<string, Array<EndpointProperties>>();
