@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@scsa/base": "https://github.com:guddii/scsa-cfg-base.git",
+    "@scsa/build": "https://github.com:guddii/scsa-cfg-build.git",
     "@scsa/global": "https://github.com:guddii/scsa-cfg-global.git"
   },
   "repository": {
