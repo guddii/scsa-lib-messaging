@@ -30,7 +30,7 @@ export class MessageEndpoint implements EventListenerObject {
      * @param message
      */
     publish(message: Message) {
-        parent.postMessage(message, this.mainProperties.url.origin);
+        parent.postMessage(message, "*");
     }
 
     /**
