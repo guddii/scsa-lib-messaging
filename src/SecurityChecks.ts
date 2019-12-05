@@ -1,5 +1,3 @@
-import { cfg } from "../../../applications/catalogue/frontend/src/config";
-
 export class SecurityChecks {
     private secureContexts: Array<string>;
 
