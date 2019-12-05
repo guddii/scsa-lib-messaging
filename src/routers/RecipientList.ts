@@ -23,7 +23,7 @@ export class RecipientList implements MessageRouting {
      * @param host
      */
     findByHost(host: string) {
-        return this.endpoints.find(endpoint => endpoint.url.host === host);
+        return this.endpoints.find(endpoint => endpoint.options.url.host === host);
     }
 
     /**
@@ -32,8 +32,8 @@ export class RecipientList implements MessageRouting {
      */
     getRecipients(event: MessageEvent): Array<EndpointProperties> {
         const publisher = this.findByHost(new URL(event.origin).host);
-        if (publisher && this.recipients.has(publisher.name)) {
-            return this.recipients.get(publisher.name);
+        if (publisher && this.recipients.has(publisher.options.text)) {
+            return this.recipients.get(publisher.options.text);
         }
         return [];
     }

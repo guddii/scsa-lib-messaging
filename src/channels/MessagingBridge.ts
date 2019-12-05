@@ -1,9 +1,9 @@
-import { MessagingEndpoints } from "../types/MessagingEndpoints";
+import { MessagingEndpoints } from "../types";
 import { SecurityChecks } from "../SecurityChecks";
-import { ChannelAdapter, MessagingChannel } from "../types/MessagingChannel";
+import { ChannelAdapter, MessagingChannel } from "../types";
 import { ChannelAdapterFactory } from "./adapter/ChannelAdapterFactory";
-import { MessageRouting } from "../types/MessageRouting";
-import { EndpointProperties } from "../endpoints/Endpoint";
+import { MessageRouting } from "../types";
+import { EndpointProperties } from "../endpoints";
 
 export class MessagingBridge implements EventListenerObject, MessagingChannel {
     private registry = new Map<string, ChannelAdapter>();
@@ -36,16 +36,16 @@ export class MessagingBridge implements EventListenerObject, MessagingChannel {
      * @param endpointProperties
      */
     private register = (endpointProperties: EndpointProperties) => {
-        if (this.securityChecks.isTrustedURL(endpointProperties.url.href)) {
+        if (this.securityChecks.isTrustedURL(endpointProperties.options.url.href)) {
             this.registry.set(
-                endpointProperties.name,
+                endpointProperties.options.text,
                 ChannelAdapterFactory.create(
                     this.channelAdapterType,
-                    endpointProperties.element
+                    endpointProperties.options.element
                 )
             );
         } else {
-            throw new Error(endpointProperties.url + " is a insecure origin");
+            throw new Error(endpointProperties.options.url + " is a insecure origin");
         }
     };
 
@@ -83,12 +83,12 @@ export class MessagingBridge implements EventListenerObject, MessagingChannel {
         const subscribers = this.router.getRecipients(event);
         subscribers.forEach(subscriber => {
             if (subscriber) {
-                if (this.registry.has(subscriber.name)) {
+                if (this.registry.has(subscriber.options.text)) {
                     this.registry
-                        .get(subscriber.name)
+                        .get(subscriber.options.text)
                         .notifyEventListeners(event);
                     this.registry
-                        .get(subscriber.name)
+                        .get(subscriber.options.text)
                         .publish(event.data);
                 } else {
                     throw new Error(subscriber + " does not exist in registry");

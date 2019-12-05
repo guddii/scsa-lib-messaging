@@ -1,26 +1,22 @@
+import { Application, ApplicationOptions } from "@scsa/global";
+
 enum Selector {
     ENDPOINT = "data-endpoint"
 }
 
+interface EndpointOptions extends ApplicationOptions{
+    element?: Element;
+}
+
 export class EndpointProperties {
-    name: string;
-    element: Element;
-    url: URL;
+    public options;
 
     /**
      * The endpointProperties an endpoint can have
-     * @param name
-     * @param src
-     * @param element
+     * @param options
      */
-    constructor(name: string, src?: string, element?: Element) {
-        this.name = name;
-        if (src) {
-            this.url = new URL(src);
-        }
-        if (element) {
-            this.element = element;
-        }
+    constructor(options: EndpointOptions) {
+        this.options = options;
     }
 }
 
@@ -34,11 +30,11 @@ export class Endpoint {
         );
         return endpoints.map(
             endpoint =>
-                new EndpointProperties(
-                    endpoint.getAttribute(Selector.ENDPOINT),
-                    endpoint.getAttribute("src"),
-                    endpoint
-                )
+                new EndpointProperties({
+                    text: endpoint.getAttribute(Selector.ENDPOINT),
+                    url: new URL(endpoint.getAttribute("src")),
+                    element: endpoint
+                })
         );
     }
 }

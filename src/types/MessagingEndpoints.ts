@@ -1,4 +1,4 @@
-import { EndpointProperties } from "../endpoints/Endpoint";
+import { EndpointProperties } from "../endpoints";
 
 export interface MessagingEndpoints {
     properties: EndpointProperties;

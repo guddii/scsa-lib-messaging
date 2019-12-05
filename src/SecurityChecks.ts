@@ -1,3 +1,5 @@
+import { cfg } from "../../../applications/catalogue/frontend/src/config";
+
 export class SecurityChecks {
     private secureContexts: Array<string>;
 
@@ -6,8 +8,8 @@ export class SecurityChecks {
      * secure contexts.
      * @param secureContexts
      */
-    constructor(secureContexts: Array<string> = []) {
-        this.secureContexts = secureContexts;
+    constructor(secureContexts: object = {}) {
+        this.secureContexts = Object.values(secureContexts).map((a: any) => a.options.url.host);
     }
 
     /**
