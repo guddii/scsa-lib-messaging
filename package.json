@@ -1,25 +1,50 @@
 {
-  "name": "@scsa/messaging",
-  "private": true,
-  "version": "1.0.0",
-  "description": "Messaging Library",
-  "main": "./index.ts",
-  "types": "./src/types/index.d.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_args": [
+    [
+      "git+https://github.com/guddii/scsa-lib-messaging.git",
+      "/Users/Florian/Developer/scsa/orchestrators/compoxure/frontend"
+    ]
+  ],
+  "_from": "git+https://github.com/guddii/scsa-lib-messaging.git",
+  "_id": "@scsa/messaging@git+https://github.com/guddii/scsa-lib-messaging.git#59d4f958e78b7c49e81d8f13041052662b4da772",
+  "_inBundle": false,
+  "_location": "/@scsa/messaging",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://github.com/guddii/scsa-lib-messaging.git",
+    "rawSpec": "git+https://github.com/guddii/scsa-lib-messaging.git",
+    "saveSpec": "git+https://github.com/guddii/scsa-lib-messaging.git",
+    "fetchSpec": "https://github.com/guddii/scsa-lib-messaging.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://github.com/guddii/scsa-lib-messaging.git#59d4f958e78b7c49e81d8f13041052662b4da772",
+  "_spec": "git+https://github.com/guddii/scsa-lib-messaging.git",
+  "_where": "/Users/Florian/Developer/scsa/orchestrators/compoxure/frontend",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/guddii/scsa-lib-messaging/issues"
   },
   "dependencies": {
-    "@scsa/build": "https://github.com:guddii/scsa-cfg-build.git",
-    "@scsa/global": "https://github.com:guddii/scsa-cfg-global.git"
+    "@scsa/build": "git+https://github.com/guddii/scsa-cfg-build.git",
+    "@scsa/global": "git+https://github.com/guddii/scsa-cfg-global.git"
   },
+  "description": "Messaging Library",
+  "homepage": "https://github.com/guddii/scsa-lib-messaging#readme",
+  "license": "MIT",
+  "main": "./index.ts",
+  "name": "@scsa/messaging",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/guddii/scsa-lib-messaging.git"
   },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/guddii/scsa-lib-messaging/issues"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/guddii/scsa-lib-messaging#readme"
+  "types": "./src/types/index.d.ts",
+  "version": "1.0.0"
 }
