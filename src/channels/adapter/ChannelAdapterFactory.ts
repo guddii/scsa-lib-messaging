@@ -1,5 +1,5 @@
 import { IFrameChannelAdapter } from "./IFrameChannelAdapter";
-import { ChannelAdapter } from "../../types/MessagingChannel";
+import { ChannelAdapter } from "..";
 
 export class ChannelAdapterFactory {
     /**

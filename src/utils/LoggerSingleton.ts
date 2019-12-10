@@ -2,20 +2,20 @@ export class LoggerSingleton {
     private static instance: LoggerSingleton;
     private container: HTMLElement;
 
-    private constructor() {
-        if (document.querySelector("[data-logger]")) {
-            this.container = document.querySelector("[data-logger]");
+    private constructor(parent: Document | ShadowRoot) {
+        if (parent.querySelector("[data-logger]")) {
+            this.container = parent.querySelector("[data-logger]");
         } else {
             const body = document.body;
             const container = document.createElement("div");
-            container.setAttribute("class", "Logger Logger--stickyBottom");
+            container.setAttribute("class", "Logger Logger--spaced Logger--stickyBottom");
             this.container = body.appendChild(container);
         }
     }
 
-    static getInstance() {
+    static getInstance(parent: Document | ShadowRoot = document) {
         if (!LoggerSingleton.instance) {
-            LoggerSingleton.instance = new LoggerSingleton();
+            LoggerSingleton.instance = new LoggerSingleton(parent);
         }
         return LoggerSingleton.instance;
     }

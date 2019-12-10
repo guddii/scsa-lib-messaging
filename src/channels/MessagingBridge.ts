@@ -1,51 +1,36 @@
-import { MessagingEndpoints } from "../types";
-import { SecurityChecks } from "../SecurityChecks";
-import { ChannelAdapter, MessagingChannel } from "../types";
+import { MessagingEndpoints } from "../endpoints";
+import { MessagingSystemOptions } from "../..";
+import { ChannelAdapter, MessagingChannel } from "./index";
 import { ChannelAdapterFactory } from "./adapter/ChannelAdapterFactory";
-import { MessageRouting } from "../types";
-import { EndpointProperties } from "../endpoints";
+import { Socket } from "../utils";
 
 export class MessagingBridge implements EventListenerObject, MessagingChannel {
     private registry = new Map<string, ChannelAdapter>();
-    private readonly securityChecks: SecurityChecks;
-    private readonly router: MessageRouting;
-    private readonly channelAdapterType: string;
+    private subscriber = new Array<MessagingEndpoints>();
+    public options: MessagingSystemOptions;
 
     /**
      * Create a Message Bridge
-     * @param router
-     * @param endpoints
-     * @param securityChecks
-     * @param channelAdapterType
+     * @param options
      */
-    constructor(
-        router: MessageRouting,
-        endpoints: Array<EndpointProperties>,
-        securityChecks: SecurityChecks = new SecurityChecks(),
-        channelAdapterType = "iframe"
-    ) {
+    constructor(options: MessagingSystemOptions) {
+        this.options = options;
         window.addEventListener("message", this);
-        this.securityChecks = securityChecks;
-        this.router = router;
-        this.channelAdapterType = channelAdapterType;
-        endpoints.forEach(this.register);
+        options.endpoints.forEach(this.register);
     }
 
     /**
      * Register an element
-     * @param endpointProperties
+     * @param socket
      */
-    private register = (endpointProperties: EndpointProperties) => {
-        if (this.securityChecks.isTrustedURL(endpointProperties.options.url.href)) {
+    private register = (socket: Socket) => {
+        if (this.options.security.isTrustedSocket(socket)) {
             this.registry.set(
-                endpointProperties.options.text,
-                ChannelAdapterFactory.create(
-                    this.channelAdapterType,
-                    endpointProperties.options.element
-                )
+                socket.options.text,
+                ChannelAdapterFactory.create("iframe", socket.options.element)
             );
         } else {
-            throw new Error(endpointProperties.options.url + " is a insecure origin");
+            throw new Error(socket.options.url + " is a insecure origin");
         }
     };
 
@@ -58,7 +43,7 @@ export class MessagingBridge implements EventListenerObject, MessagingChannel {
         if (this.registry.has(key)) {
             this.registry.get(key).addEventListener(messagingEndpoint);
         } else {
-            throw new Error(key + " does not exist in registry");
+            this.subscriber.push(messagingEndpoint);
         }
     }
 
@@ -80,20 +65,12 @@ export class MessagingBridge implements EventListenerObject, MessagingChannel {
      * @param event
      */
     handleEvent = (event: MessageEvent) => {
-        const subscribers = this.router.getRecipients(event);
-        subscribers.forEach(subscriber => {
-            if (subscriber) {
-                if (this.registry.has(subscriber.options.text)) {
-                    this.registry
-                        .get(subscriber.options.text)
-                        .notifyEventListeners(event);
-                    this.registry
-                        .get(subscriber.options.text)
-                        .publish(event.data);
-                } else {
-                    throw new Error(subscriber + " does not exist in registry");
-                }
-            }
+        this.subscriber.forEach(entry => {
+            entry.handleEndpoint(event.data);
+        });
+        this.registry.forEach(entry => {
+            entry.notifyEventListeners(event);
+            entry.publish(event.data);
         });
     };
 }

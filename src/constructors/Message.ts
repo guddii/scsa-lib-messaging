@@ -1,4 +1,4 @@
-import { MessageConstruction } from "../types/MessageConstruction";
+import { MessageConstruction } from "./index";
 
 export class Message implements MessageConstruction {
     body: object;

@@ -1,48 +1,40 @@
 import { MessagingBridge } from "./channels";
-import { RecipientList } from "./routers";
-import { Endpoint, EndpointProperties } from "./endpoints";
-import { MessageRouting } from "./types";
-import { MessagingChannel } from "./types";
-import { SecurityChecks } from "./SecurityChecks";
+import { Socket } from "./utils";
+import { MessagingSystemOptions } from "./MessagingSystemOptions";
 
 export class MessagingSystem {
-    endpoints: Array<EndpointProperties>;
-    channel: MessagingChannel;
-    router: MessageRouting;
+    public options: MessagingSystemOptions;
 
     /**
      * Create a message system
-     * @param recipients
-     * @param securityChecks
+     * @param options
      */
-    constructor(
-        recipients: Map<string, Array<EndpointProperties>>,
-        securityChecks: SecurityChecks = new SecurityChecks()
-    ) {
-        this.endpoints = Endpoint.findAll();
-        this.router = new RecipientList(recipients, this.endpoints);
-        this.channel = new MessagingBridge(
-            this.router,
-            this.endpoints,
-            securityChecks
-        );
+    constructor(options: MessagingSystemOptions) {
+        this.options = options;
+        this.endpoints();
+        this.channel();
+        this.router();
+        this.translator();
+        return this;
     }
-}
 
-export class MessagingSystemFactory {
-    /**
-     * Create a message system with presets.
-     * @param recipients
-     * @param securityChecks
-     * @param type
-     */
-    static create(
-        recipients: Map<string, Array<EndpointProperties>>,
-        securityChecks: SecurityChecks = new SecurityChecks(),
-        type = "iFrameBridge"
-    ) {
-        if (type === "iFrameBridge") {
-            return new MessagingSystem(recipients, securityChecks);
-        }
+    endpoints() {
+        this.options.endpoints = this.options.endpoints || Socket.findAll();
+        return this;
+    }
+
+    channel() {
+        this.options.channel =
+            this.options.channel || new MessagingBridge(this.options);
+        return this;
+    }
+
+    router() {
+        this.options.router = this.options.router || null;
+        return this;
+    }
+
+    translator() {
+        return this;
     }
 }

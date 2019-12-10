@@ -1,6 +1,6 @@
-import { MessagingEndpoints } from "../../types/MessagingEndpoints";
-import { MessageConstruction } from "../../types/MessageConstruction";
-import { ChannelAdapter } from "../../types/MessagingChannel";
+import { MessagingEndpoints } from "../../endpoints";
+import { MessageConstruction } from "../../constructors";
+import { ChannelAdapter } from "..";
 
 export class IFrameChannelAdapter implements ChannelAdapter {
     private readonly url: URL;
@@ -14,8 +14,8 @@ export class IFrameChannelAdapter implements ChannelAdapter {
      * @param element
      */
     constructor(element: HTMLIFrameElement) {
-        this.dispatcher = element.contentWindow;
-        this.url = new URL(element.src);
+        this.dispatcher = element.contentWindow || window;
+        this.url = new URL(element.getAttribute("src"));
         this.status = this.load(element);
         this.element = element;
     }

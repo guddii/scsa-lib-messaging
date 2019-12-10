@@ -1,1 +1,2 @@
-export * from "./RecipientList"
+export interface MessageRouting {
+}
