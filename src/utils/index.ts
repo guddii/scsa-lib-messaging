@@ -1,3 +1,3 @@
 export * from "./Socket";
-export * from "./LoggerSingleton";
+export * from "./Logger";
 export * from "./SecurityChecks";
