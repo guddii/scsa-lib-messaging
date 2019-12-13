@@ -1,7 +1,16 @@
-import { MessagingBridge } from "./channels";
-import { Socket } from "./utils";
-import { MessagingSystemOptions } from "./MessagingSystemOptions";
+import { MessagingBridge, MessagingChannel } from "./channels";
+import { SecurityChecks, Socket } from "./utils";
+import { MessageRouting } from "./routers";
 
+/**
+ * Messaging System
+ */
+export interface MessagingSystemOptions {
+    endpoints?: Array<Socket>;
+    router?: MessageRouting;
+    channel?: MessagingChannel;
+    security?: SecurityChecks;
+}
 export class MessagingSystem {
     public options: MessagingSystemOptions;
 
@@ -15,6 +24,7 @@ export class MessagingSystem {
         this.channel();
         this.router();
         this.translator();
+        globalThis.MessagingSystem = this;
         return this;
     }
 

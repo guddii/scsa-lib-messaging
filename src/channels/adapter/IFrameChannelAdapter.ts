@@ -4,7 +4,7 @@ import { ChannelAdapter } from "..";
 
 export class IFrameChannelAdapter implements ChannelAdapter {
     private readonly url: URL;
-    private readonly dispatcher: Window;
+    private readonly dispatcher: Window | HTMLElement;
     private eventListeners = new Array<MessagingEndpoints>();
     private readonly status: Promise<CustomEvent>;
     private readonly element: HTMLIFrameElement;
@@ -14,10 +14,10 @@ export class IFrameChannelAdapter implements ChannelAdapter {
      * @param element
      */
     constructor(element: HTMLIFrameElement) {
-        this.dispatcher = element.contentWindow || window;
         this.url = new URL(element.getAttribute("src"));
         this.status = this.load(element);
         this.element = element;
+        this.dispatcher = element.contentWindow || element;
     }
 
     /**
@@ -36,8 +36,16 @@ export class IFrameChannelAdapter implements ChannelAdapter {
      * @param message
      */
     async publish(message: MessageConstruction) {
-        await this.status;
-        this.dispatcher.postMessage(message, this.url.origin);
+        if ("postMessage" in this.dispatcher) {
+            await this.status;
+            // @ts-ignore
+            this.dispatcher.postMessage(message, this.url.origin);
+        } else {
+            var event = new CustomEvent("message", {
+                detail: message
+            });
+            this.dispatcher.dispatchEvent(event);
+        }
     }
 
     /**

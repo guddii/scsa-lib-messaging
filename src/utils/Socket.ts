@@ -1,4 +1,4 @@
-import { Application, ApplicationOptions } from "@scsa/global";
+import { ApplicationOptions } from "@scsa/global";
 
 enum SocketProperties {
     selector = "data-endpoint"

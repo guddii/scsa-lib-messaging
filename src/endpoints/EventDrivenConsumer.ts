@@ -6,8 +6,8 @@ export interface IEventDrivenConsumer {
 }
 
 export class EventDrivenConsumer implements EventListenerObject {
-
     cfg;
+    ctx = parent;
     private securityChecks: SecurityChecks;
     subscriber = [];
 
@@ -18,7 +18,16 @@ export class EventDrivenConsumer implements EventListenerObject {
     constructor(cfg) {
         this.cfg = cfg;
         this.securityChecks = new SecurityChecks(cfg.endpoints());
-        window.addEventListener("message", this, false);
+        if (globalThis.MessagingSystem) {
+            const selector = `[data-endpoint="${cfg.CURRENT.options.text}"]`;
+            document
+                .querySelector(selector)
+                .addEventListener("message", this, false);
+            console.log(`EventDrivenConsumer is listening to ${selector}`);
+        } else {
+            window.addEventListener("message", this, false);
+            console.log(`EventDrivenConsumer is listening to window`);
+        }
     }
 
     /**
@@ -26,7 +35,7 @@ export class EventDrivenConsumer implements EventListenerObject {
      * @param message
      */
     publish(message: Message) {
-        parent.postMessage(message, "*");
+        this.ctx.postMessage(message, "*");
     }
 
     /**
@@ -34,7 +43,7 @@ export class EventDrivenConsumer implements EventListenerObject {
      * @param element
      */
     subscribe(element: IEventDrivenConsumer) {
-        this.subscriber.push(element)
+        this.subscriber.push(element);
     }
 
     /**
@@ -42,13 +51,18 @@ export class EventDrivenConsumer implements EventListenerObject {
      * @param event
      */
     handleEvent(event: MessageEvent) {
-        if (!event.data.body) {
-            return;
+        let data;
+        // @ts-ignore
+        if (event.detail) {
+            // @ts-ignore
+            data = event.detail;
+        } else {
+            data = event.data;
         }
-        if (this.securityChecks.isTrustedURL(event.origin)) {
-            this.subscriber.forEach((el) => {
-                el.callback(event.data);
-            })
-        }
+
+        this.subscriber.forEach(el => {
+            // @ts-ignore
+            el.callback(data);
+        });
     }
 }

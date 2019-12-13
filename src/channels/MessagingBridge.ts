@@ -5,6 +5,7 @@ import { ChannelAdapterFactory } from "./adapter/ChannelAdapterFactory";
 import { Socket } from "../utils";
 
 export class MessagingBridge implements EventListenerObject, MessagingChannel {
+
     private registry = new Map<string, ChannelAdapter>();
     private subscriber = new Array<MessagingEndpoints>();
     public options: MessagingSystemOptions;
@@ -56,7 +57,9 @@ export class MessagingBridge implements EventListenerObject, MessagingChannel {
         if (this.registry.has(key)) {
             return this.registry.get(key).publish(message);
         } else {
-            throw new Error(key + " does not exist in registry");
+            this.registry.forEach(entry => {
+                entry.publish(message);
+            });
         }
     }
 
