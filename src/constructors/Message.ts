@@ -1,13 +1,13 @@
-import { MessageConstruction } from "./index";
+import { IMessageConstruction } from "./index";
 
-export class Message implements MessageConstruction {
-    public body: object;
+export class Message implements IMessageConstruction {
+    public payload: object;
 
     /**
      * Create a message
-     * @param body
+     * @param payload
      */
-    constructor(body: object) {
-        this.body = body;
+    constructor(payload: object) {
+        this.payload = payload;
     }
 }

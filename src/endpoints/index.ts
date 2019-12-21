@@ -1,8 +1,8 @@
 export * from "./EventDrivenConsumer"
-export * from "./EventDrivenConsumerOnGT"
-export * from "./EventDrivenConsumerOnMS"
+export * from "./EventDrivenConsumerGT"
+export * from "./EventDrivenConsumerMS"
 
-export interface MessagingEndpoints {
+export interface IMessagingEndpoints {
 
   /**
    * Handle messages from an endpoint

@@ -1,4 +1,4 @@
-import { ISystemOptions } from "@scsa/global";
+import { Config } from "@scsa/global";
 import { SecurityChecks } from "../..";
 import { Message } from "../constructors";
 
@@ -6,17 +6,20 @@ export interface IEventDrivenConsumer {
     callback(data);
 }
 
-export abstract class EventDrivenConsumer<T extends Event> implements EventListenerObject {
-    public cfg: ISystemOptions;
-    public ctx: Window | MessageChannel = parent;
+export abstract class EventDrivenConsumer<T extends Event>
+    implements EventListenerObject {
+    public cfg: Config;
+    public ctx: Window = parent;
     public subscriber = [];
+
+    public listener: any;
     private securityChecks: SecurityChecks;
 
     /**
      * Create messaging endpoint
      * @param cfg
      */
-    protected constructor(cfg: ISystemOptions) {
+    protected constructor(cfg: Config) {
         this.cfg = cfg;
         this.securityChecks = new SecurityChecks(cfg.endpoints());
     }
@@ -50,8 +53,7 @@ export abstract class EventDrivenConsumer<T extends Event> implements EventListe
         this.subscriber.forEach(el => {
             el.callback(data);
         });
-    };
-
+    }
     /**
      * Subscribe to message events
      * @param element

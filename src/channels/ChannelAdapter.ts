@@ -2,7 +2,7 @@ import { IChannelAdapter } from ".";
 import { IMessageConstruction } from "../constructors";
 import { IMessagingEndpoints } from "../endpoints";
 
-export class IFrameChannelAdapter implements IChannelAdapter {
+export class ChannelAdapter implements IChannelAdapter {
     private readonly url: URL;
     private readonly dispatcher: Window | HTMLElement;
     private eventListeners = new Array<IMessagingEndpoints>();
@@ -38,7 +38,6 @@ export class IFrameChannelAdapter implements IChannelAdapter {
     public async publish(message: IMessageConstruction) {
         if ("postMessage" in this.dispatcher) {
             await this.status;
-            // @ts-ignore
             this.dispatcher.postMessage(message, this.url.origin);
         } else {
             const event = new CustomEvent("message", {

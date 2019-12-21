@@ -1,15 +1,16 @@
-import { MessageConstruction } from "../constructors";
-import { MessagingEndpoints } from "../endpoints";
+import { IMessageConstruction } from "../constructors";
+import { IMessagingEndpoints } from "../endpoints";
 
 export * from "./MessagingBridge";
+export * from "./MessageBus";
 
 export interface IChannelAdapter {
-  publish(message: MessageConstruction): void;
-  addEventListener(messagingEndpoint: MessagingEndpoints): void;
+  publish(message: IMessageConstruction): void;
+  addEventListener(messagingEndpoint: IMessagingEndpoints): void;
   notifyEventListeners(event: MessageEvent): void;
 }
 
 export interface IMessagingChannel {
-  subscribe(messagingEndpoint: MessagingEndpoints, key?: string): void;
-  publish(message: MessageConstruction, key?: string): void;
+  subscribe(messagingEndpoint: IMessagingEndpoints, key?: string): void;
+  publish(message: IMessageConstruction, key?: string): void;
 }

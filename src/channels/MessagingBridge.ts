@@ -1,14 +1,32 @@
 import { IMessagingSystemOptions } from "../..";
-import { MessagingEndpoints } from "../endpoints";
+import { IMessagingEndpoints } from "../endpoints";
 import { Socket } from "../utils";
-import { ChannelAdapterFactory } from "./adapter/ChannelAdapterFactory";
+import { ChannelAdapter } from "./ChannelAdapter";
 import { IChannelAdapter, IMessagingChannel } from "./index";
 
+
+/**
+ * Messaging Bridge.
+ *
+ * @mermaid Data flow within a Messaging Bridge.
+ * graph TB
+ *    A[globalThis]--> B[Messaging System]
+ *    B --> C{Messaging Bridge}
+ *    C --> D[...]
+ *    C --> E[...]
+ *    C --> F[Channel Adapter]
+ *    F --> G[Socket]
+ *    G --> H[Event-driven Consumer]
+ *    H-->|postMessage|A
+ *    H-->|postMessage|B
+ *    H-->|subscribe|J[Application]
+ *    J-->|publish|H
+ */
 export class MessagingBridge implements EventListenerObject, IMessagingChannel {
     public options: IMessagingSystemOptions;
 
     private registry = new Map<string, IChannelAdapter>();
-    private subscriber = new Array<MessagingEndpoints>();
+    private subscriber = new Array<IMessagingEndpoints>();
 
     /**
      * Create a Message Bridge
@@ -23,14 +41,14 @@ export class MessagingBridge implements EventListenerObject, IMessagingChannel {
 
     /**
      * Subscribe to a endpoint from the registry
-     * @param messagingEndpoint
+     * @param endpoint
      * @param key
      */
-    public subscribe(messagingEndpoint: MessagingEndpoints, key?: string) {
+    public subscribe(endpoint: IMessagingEndpoints, key?: string) {
         if (this.registry.has(key)) {
-            this.registry.get(key).addEventListener(messagingEndpoint);
+            this.registry.get(key).addEventListener(endpoint);
         } else {
-            this.subscriber.push(messagingEndpoint);
+            this.subscriber.push(endpoint);
         }
     }
 
@@ -71,7 +89,7 @@ export class MessagingBridge implements EventListenerObject, IMessagingChannel {
         if (this.options.security.isTrustedSocket(socket)) {
             this.registry.set(
                 socket.options.text,
-                ChannelAdapterFactory.create("iframe", socket.options.element)
+                new ChannelAdapter(socket.options.element as HTMLIFrameElement)
             );
         } else {
             throw new Error(socket.options.url + " is a insecure origin");
