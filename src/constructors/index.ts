@@ -1,5 +1,5 @@
 export * from "./Message"
 
-export interface MessageConstruction {
-  body: any;
+export interface IMessageConstruction {
+  payload: object;
 }

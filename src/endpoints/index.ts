@@ -1,4 +1,6 @@
 export * from "./EventDrivenConsumer"
+export * from "./EventDrivenConsumerOnGT"
+export * from "./EventDrivenConsumerOnMS"
 
 export interface MessagingEndpoints {
 

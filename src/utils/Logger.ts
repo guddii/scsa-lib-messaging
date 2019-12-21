@@ -19,7 +19,7 @@ export class Logger {
         }
     }
 
-    write(data: any) {
+    public write(data: any) {
         const div = document.createElement("div");
         div.setAttribute("class", "Logger__item");
         div.textContent = "Received data: " + JSON.stringify(data);

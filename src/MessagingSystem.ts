@@ -1,50 +1,57 @@
-import { MessagingBridge, MessagingChannel } from "./channels";
-import { SecurityChecks, Socket } from "./utils";
+import { IMessagingChannel, MessageBus, MessagingBridge } from "./channels";
 import { MessageRouting } from "./routers";
+import { SecurityChecks, Socket } from "./utils";
+
+export enum ChannelKeys {
+    DatatypeChannel,
+    MessageBus,
+    MessagingBridge
+}
 
 /**
- * Messaging System
+ * Interface for Messaging System Options
  */
-export interface MessagingSystemOptions {
-    endpoints?: Array<Socket>;
+export interface IMessagingSystemOptions {
+    channel?: IMessagingChannel;
+    endpoints?: Socket[];
     router?: MessageRouting;
-    channel?: MessagingChannel;
     security?: SecurityChecks;
 }
+
+/**
+ * Messaging System Class
+ */
 export class MessagingSystem {
-    public options: MessagingSystemOptions;
+    public options: IMessagingSystemOptions;
+    public type: ChannelKeys;
 
     /**
      * Create a message system
      * @param options
      */
-    constructor(options: MessagingSystemOptions) {
-        this.options = options;
+    constructor(options?: IMessagingSystemOptions) {
+        this.options = options || {};
+
+        // Set defaults
+        this.security();
         this.endpoints();
         this.channel();
-        this.router();
-        this.translator();
+
+        // Export to global scope
         globalThis.MessagingSystem = this;
         return this;
     }
 
-    endpoints() {
+    public security(): this {
+        return this;
+    }
+
+    public channel(): this {
+        return this;
+    }
+
+    public endpoints(): this {
         this.options.endpoints = this.options.endpoints || Socket.findAll();
-        return this;
-    }
-
-    channel() {
-        this.options.channel =
-            this.options.channel || new MessagingBridge(this.options);
-        return this;
-    }
-
-    router() {
-        this.options.router = this.options.router || null;
-        return this;
-    }
-
-    translator() {
         return this;
     }
 }

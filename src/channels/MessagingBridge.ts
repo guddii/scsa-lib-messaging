@@ -1,24 +1,67 @@
+import { IMessagingSystemOptions } from "../..";
 import { MessagingEndpoints } from "../endpoints";
-import { MessagingSystemOptions } from "../..";
-import { ChannelAdapter, MessagingChannel } from "./index";
-import { ChannelAdapterFactory } from "./adapter/ChannelAdapterFactory";
 import { Socket } from "../utils";
+import { ChannelAdapterFactory } from "./adapter/ChannelAdapterFactory";
+import { IChannelAdapter, IMessagingChannel } from "./index";
 
-export class MessagingBridge implements EventListenerObject, MessagingChannel {
+export class MessagingBridge implements EventListenerObject, IMessagingChannel {
+    public options: IMessagingSystemOptions;
 
-    private registry = new Map<string, ChannelAdapter>();
+    private registry = new Map<string, IChannelAdapter>();
     private subscriber = new Array<MessagingEndpoints>();
-    public options: MessagingSystemOptions;
 
     /**
      * Create a Message Bridge
      * @param options
      */
-    constructor(options: MessagingSystemOptions) {
+    constructor(options: IMessagingSystemOptions) {
         this.options = options;
+
         window.addEventListener("message", this);
         options.endpoints.forEach(this.register);
     }
+
+    /**
+     * Subscribe to a endpoint from the registry
+     * @param messagingEndpoint
+     * @param key
+     */
+    public subscribe(messagingEndpoint: MessagingEndpoints, key?: string) {
+        if (this.registry.has(key)) {
+            this.registry.get(key).addEventListener(messagingEndpoint);
+        } else {
+            this.subscriber.push(messagingEndpoint);
+        }
+    }
+
+    /**
+     * Publish to a endpoint from the registry
+     * @param message
+     * @param key
+     */
+    public publish(message: any, key?: string) {
+        if (this.registry.has(key)) {
+            return this.registry.get(key).publish(message);
+        } else {
+            this.registry.forEach(entry => {
+                entry.publish(message);
+            });
+        }
+    }
+
+    /**
+     * Handle a event from an Endpoint
+     * @param event
+     */
+    public handleEvent = (event: MessageEvent) => {
+        this.subscriber.forEach(entry => {
+            entry.handleEndpoint(event.data);
+        });
+        this.registry.forEach(entry => {
+            entry.notifyEventListeners(event);
+            entry.publish(event.data);
+        });
+    };
 
     /**
      * Register an element
@@ -33,47 +76,5 @@ export class MessagingBridge implements EventListenerObject, MessagingChannel {
         } else {
             throw new Error(socket.options.url + " is a insecure origin");
         }
-    };
-
-    /**
-     * Subscribe to a endpoint from the registry
-     * @param messagingEndpoint
-     * @param key
-     */
-    subscribe(messagingEndpoint: MessagingEndpoints, key?: string) {
-        if (this.registry.has(key)) {
-            this.registry.get(key).addEventListener(messagingEndpoint);
-        } else {
-            this.subscriber.push(messagingEndpoint);
-        }
-    }
-
-    /**
-     * Publish to a endpoint from the registry
-     * @param message
-     * @param key
-     */
-    publish(message: any, key?: string) {
-        if (this.registry.has(key)) {
-            return this.registry.get(key).publish(message);
-        } else {
-            this.registry.forEach(entry => {
-                entry.publish(message);
-            });
-        }
-    }
-
-    /**
-     * Handle a event from an Endpoint
-     * @param event
-     */
-    handleEvent = (event: MessageEvent) => {
-        this.subscriber.forEach(entry => {
-            entry.handleEndpoint(event.data);
-        });
-        this.registry.forEach(entry => {
-            entry.notifyEventListeners(event);
-            entry.publish(event.data);
-        });
     };
 }

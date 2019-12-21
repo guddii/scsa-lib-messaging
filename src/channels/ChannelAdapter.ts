@@ -1,11 +1,11 @@
-import { MessagingEndpoints } from "../../endpoints";
-import { MessageConstruction } from "../../constructors";
-import { ChannelAdapter } from "..";
+import { IChannelAdapter } from ".";
+import { IMessageConstruction } from "../constructors";
+import { IMessagingEndpoints } from "../endpoints";
 
-export class IFrameChannelAdapter implements ChannelAdapter {
+export class IFrameChannelAdapter implements IChannelAdapter {
     private readonly url: URL;
     private readonly dispatcher: Window | HTMLElement;
-    private eventListeners = new Array<MessagingEndpoints>();
+    private eventListeners = new Array<IMessagingEndpoints>();
     private readonly status: Promise<CustomEvent>;
     private readonly element: HTMLIFrameElement;
 
@@ -24,7 +24,7 @@ export class IFrameChannelAdapter implements ChannelAdapter {
      * Load wait for the iFrame to be loaded.
      * @param element
      */
-    async load(element: HTMLIFrameElement): Promise<any> {
+    public async load(element: HTMLIFrameElement): Promise<any> {
         return new Promise(resolve => {
             element.addEventListener("load", resolve, true);
         });
@@ -35,13 +35,13 @@ export class IFrameChannelAdapter implements ChannelAdapter {
      * when the iFrame is fully loaded
      * @param message
      */
-    async publish(message: MessageConstruction) {
+    public async publish(message: IMessageConstruction) {
         if ("postMessage" in this.dispatcher) {
             await this.status;
             // @ts-ignore
             this.dispatcher.postMessage(message, this.url.origin);
         } else {
-            var event = new CustomEvent("message", {
+            const event = new CustomEvent("message", {
                 detail: message
             });
             this.dispatcher.dispatchEvent(event);
@@ -52,7 +52,7 @@ export class IFrameChannelAdapter implements ChannelAdapter {
      * Listen to iframe messaging
      * @param eventListener
      */
-    addEventListener(eventListener: MessagingEndpoints) {
+    public addEventListener(eventListener: IMessagingEndpoints) {
         this.eventListeners.push(eventListener);
     }
 
@@ -60,7 +60,7 @@ export class IFrameChannelAdapter implements ChannelAdapter {
      * Notify registered event listener
      * @param event
      */
-    notifyEventListeners(event: MessageEvent) {
+    public notifyEventListeners(event: MessageEvent) {
         for (const listener of this.eventListeners) {
             listener.handleEndpoint(event.data);
         }

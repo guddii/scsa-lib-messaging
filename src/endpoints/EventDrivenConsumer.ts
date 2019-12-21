@@ -1,3 +1,4 @@
+import { ISystemOptions } from "@scsa/global";
 import { SecurityChecks } from "../..";
 import { Message } from "../constructors";
 
@@ -5,64 +6,57 @@ export interface IEventDrivenConsumer {
     callback(data);
 }
 
-export class EventDrivenConsumer implements EventListenerObject {
-    cfg;
-    ctx = parent;
+export abstract class EventDrivenConsumer<T extends Event> implements EventListenerObject {
+    public cfg: ISystemOptions;
+    public ctx: Window | MessageChannel = parent;
+    public subscriber = [];
     private securityChecks: SecurityChecks;
-    subscriber = [];
 
     /**
      * Create messaging endpoint
      * @param cfg
      */
-    constructor(cfg) {
+    protected constructor(cfg: ISystemOptions) {
         this.cfg = cfg;
         this.securityChecks = new SecurityChecks(cfg.endpoints());
-        if (globalThis.MessagingSystem) {
-            const selector = `[data-endpoint="${cfg.CURRENT.options.text}"]`;
-            document
-                .querySelector(selector)
-                .addEventListener("message", this, false);
-            console.log(`EventDrivenConsumer is listening to ${selector}`);
-        } else {
-            window.addEventListener("message", this, false);
-            console.log(`EventDrivenConsumer is listening to window`);
-        }
     }
 
     /**
      * Publish a message to the parent window
      * @param message
      */
-    publish(message: Message) {
-        this.ctx.postMessage(message, "*");
+    public publish(message: Message) {
+        if ("postMessage" in this.ctx) {
+            this.ctx.postMessage(message, "*");
+        } else {
+            throw Error("postMessage is not available");
+        }
     }
 
     /**
-     * Subscribe to message events
-     * @param element
+     * Message event
+     * @param event
      */
-    subscribe(element: IEventDrivenConsumer) {
-        this.subscriber.push(element);
+    public adapter(event: T): Message {
+        throw Error("No event adapter specified!");
     }
 
     /**
      * Handle incoming events from parent context
      * @param event
      */
-    handleEvent(event: MessageEvent) {
-        let data;
-        // @ts-ignore
-        if (event.detail) {
-            // @ts-ignore
-            data = event.detail;
-        } else {
-            data = event.data;
-        }
-
+    public handleEvent(event) {
+        const data = this.adapter(event);
         this.subscriber.forEach(el => {
-            // @ts-ignore
             el.callback(data);
         });
+    };
+
+    /**
+     * Subscribe to message events
+     * @param element
+     */
+    public subscribe(element: IEventDrivenConsumer) {
+        this.subscriber.push(element);
     }
 }

@@ -1,7 +1,7 @@
 import { MessageConstruction } from "./index";
 
 export class Message implements MessageConstruction {
-    body: object;
+    public body: object;
 
     /**
      * Create a message

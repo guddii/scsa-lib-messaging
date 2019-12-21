@@ -1,7 +1,7 @@
 import { Socket } from "./Socket";
 
 export class SecurityChecks {
-    private secureContexts: Array<string>;
+    private secureContexts: string[];
 
     /**
      * Create security checks with a list of
@@ -18,7 +18,7 @@ export class SecurityChecks {
      * Test if a given origin is considered trusted.
      * @param origin
      */
-    isTrustedURL(origin: string): boolean {
+    public isTrustedURL(origin: string): boolean {
         const host = new URL(origin).host;
         return !!this.secureContexts.find(value => value === host);
     }
@@ -27,7 +27,7 @@ export class SecurityChecks {
      * Test if a given origin is considered trusted.
      * @param socket
      */
-    isTrustedSocket(socket: Socket): boolean {
+    public isTrustedSocket(socket: Socket): boolean {
         const host = socket.options.url.host;
         return !!this.secureContexts.find(value => value === host);
     }
