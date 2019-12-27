@@ -1,5 +1,4 @@
 import { Config } from "@scsa/global";
-import { MessageBus } from "../channels";
 import { Message } from "../constructors";
 import { ChannelKeys, MessagingSystem } from "../MessagingSystem";
 import { EventDrivenConsumer } from "./EventDrivenConsumer";
@@ -25,7 +24,12 @@ export class EventDrivenConsumerMS extends EventDrivenConsumer<CustomEvent> {
                 listener.addEventListener("message", this, false);
                 break;
             case ChannelKeys.MessageBus:
-                window.addEventListener("message", this, false);
+                // @ts-ignore
+                this.ms.options.channel.port1.addEventListener(
+                    "message",
+                    this,
+                    false
+                );
                 break;
             case ChannelKeys.DatatypeChannel:
                 break;
@@ -41,10 +45,8 @@ export class EventDrivenConsumerMS extends EventDrivenConsumer<CustomEvent> {
                 super.publish(message);
                 break;
             case ChannelKeys.MessageBus:
-                const event = new CustomEvent("message", {
-                    detail: message
-                });
-                window.dispatchEvent(event);
+                // @ts-ignore
+                this.ms.options.channel.port2.postMessage(message);
                 break;
             default:
                 console.warn("No Messaging System Type identifiable");
@@ -57,6 +59,15 @@ export class EventDrivenConsumerMS extends EventDrivenConsumer<CustomEvent> {
      * @param event
      */
     public adapter(event: CustomEvent): Message {
-        return event.detail;
+        switch (this.ms.type) {
+            case ChannelKeys.MessagingBridge:
+                return event.detail;
+            case ChannelKeys.MessageBus:
+                // @ts-ignore
+                return event.data;
+            default:
+                console.warn("No Messaging System Type identifiable");
+                break;
+        }
     }
 }

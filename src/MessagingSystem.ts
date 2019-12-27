@@ -1,4 +1,4 @@
-import { IMessagingChannel, MessageBus, MessagingBridge } from "./channels";
+import { IMessagingChannel } from "./channels";
 import { MessageRouting } from "./routers";
 import { SecurityChecks, Socket } from "./utils";
 
@@ -42,14 +42,23 @@ export class MessagingSystem {
         return this;
     }
 
+    /**
+     * Security
+     */
     public security(): this {
         return this;
     }
 
+    /**
+     * Channel
+     */
     public channel(): this {
         return this;
     }
 
+    /**
+     * Endpoints
+     */
     public endpoints(): this {
         this.options.endpoints = this.options.endpoints || Socket.findAll();
         return this;

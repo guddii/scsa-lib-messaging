@@ -4,7 +4,6 @@ import { Socket } from "../utils";
 import { ChannelAdapter } from "./ChannelAdapter";
 import { IChannelAdapter, IMessagingChannel } from "./index";
 
-
 /**
  * Messaging Bridge.
  *
