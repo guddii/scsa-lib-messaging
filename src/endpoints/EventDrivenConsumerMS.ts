@@ -31,7 +31,9 @@ export class EventDrivenConsumerMS extends EventDrivenConsumer<CustomEvent> {
                     false
                 );
                 break;
-            case ChannelKeys.DatatypeChannel:
+            case ChannelKeys.MessageBroker:
+                // @ts-ignore
+                navigator.serviceWorker.addEventListener("message", this, false);
                 break;
             default:
                 console.warn("No Messaging System Type identifiable");
@@ -48,6 +50,11 @@ export class EventDrivenConsumerMS extends EventDrivenConsumer<CustomEvent> {
                 // @ts-ignore
                 this.ms.options.channel.port2.postMessage(message);
                 break;
+            case ChannelKeys.MessageBroker:
+                // @ts-ignore
+                navigator.serviceWorker.controller.postMessage(message);
+                break;
+
             default:
                 console.warn("No Messaging System Type identifiable");
                 break;
@@ -63,6 +70,9 @@ export class EventDrivenConsumerMS extends EventDrivenConsumer<CustomEvent> {
             case ChannelKeys.MessagingBridge:
                 return event.detail;
             case ChannelKeys.MessageBus:
+                // @ts-ignore
+                return event.data;
+            case ChannelKeys.MessageBroker:
                 // @ts-ignore
                 return event.data;
             default:

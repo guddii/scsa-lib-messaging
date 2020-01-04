@@ -1,11 +1,12 @@
 import { IMessagingChannel } from "./channels";
-import { MessageRouting } from "./routers";
+import { IMessageRouting } from "./routers";
 import { SecurityChecks, Socket } from "./utils";
 
 export enum ChannelKeys {
     DatatypeChannel,
     MessageBus,
-    MessagingBridge
+    MessagingBridge,
+    MessageBroker
 }
 
 /**
@@ -14,7 +15,7 @@ export enum ChannelKeys {
 export interface IMessagingSystemOptions {
     channel?: IMessagingChannel;
     endpoints?: Socket[];
-    router?: MessageRouting;
+    router?: IMessageRouting;
     security?: SecurityChecks;
 }
 
@@ -36,24 +37,18 @@ export class MessagingSystem {
         this.security();
         this.endpoints();
         this.channel();
+        this.router();
 
         // Export to global scope
         globalThis.MessagingSystem = this;
         return this;
     }
 
-    /**
-     * Security
-     */
-    public security(): this {
-        return this;
-    }
-
-    /**
-     * Channel
-     */
-    public channel(): this {
-        return this;
+    public get observable() {
+        if (this.options.router) {
+            return this.options.router;
+        }
+        return this.options.channel;
     }
 
     /**
@@ -61,6 +56,27 @@ export class MessagingSystem {
      */
     public endpoints(): this {
         this.options.endpoints = this.options.endpoints || Socket.findAll();
+        return this;
+    }
+
+    /**
+     * Security
+     */
+    protected security(): this {
+        return this;
+    }
+
+    /**
+     * Channel
+     */
+    protected channel(): this {
+        return this;
+    }
+
+    /**
+     * Router
+     */
+    protected router(): this {
         return this;
     }
 }
