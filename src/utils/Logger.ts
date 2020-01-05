@@ -21,8 +21,8 @@ export class Logger {
 
     public write(data: any) {
         const div = document.createElement("div");
-        div.setAttribute("class", "Logger__item");
-        div.textContent = "Received data: " + JSON.stringify(data);
+        div.setAttribute("class", "Logger__item Logger__item--truncate");
+        div.textContent = "Data: " + JSON.stringify(data.payload);
         this.container.appendChild(div);
     }
 }
