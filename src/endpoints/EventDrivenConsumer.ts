@@ -9,7 +9,7 @@ export interface IEventDrivenConsumer {
 export abstract class EventDrivenConsumer<T extends Event>
     implements EventListenerObject {
     public cfg: Config;
-    public ctx: Window = parent;
+    public ctx: Window = top;
     public subscriber = [];
 
     public listener: any;

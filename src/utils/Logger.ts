@@ -1,11 +1,11 @@
-interface LoggerOptions {
+interface ILoggerOptions {
     ctx?: Element | Document | ShadowRoot;
 }
 
 export class Logger {
     private container: Element;
 
-    constructor(options: LoggerOptions = {}) {
+    constructor(options: ILoggerOptions = {}) {
         if (options.ctx) {
             this.container = options.ctx.querySelector("[data-logger]");
         } else {
