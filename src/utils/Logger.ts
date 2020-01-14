@@ -22,7 +22,8 @@ export class Logger {
     public write(data: any) {
         const div = document.createElement("div");
         div.setAttribute("class", "Logger__item Logger__item--truncate");
-        div.textContent = "Data: " + JSON.stringify(data.payload);
+        data.traveled = new Date().getTime() - data.created;
+        div.textContent = "Data: " + JSON.stringify(data);
         this.container.appendChild(div);
     }
 }
